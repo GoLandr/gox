@@ -35,9 +35,10 @@ func realMain() int {
 	flags.Var(platformFlag.ArchFlagValue(), "arch", "arch to build for or skip")
 	flags.Var(platformFlag.OSArchFlagValue(), "osarch", "os/arch pairs to build for or skip")
 	flags.Var(platformFlag.OSFlagValue(), "os", "os to build for or skip")
+	flags.Var(platformFlag.ARMArchFlagValue(), "armarch", "os to build for or skip")
 	flags.StringVar(&ldflags, "ldflags", "", "linker flags")
 	flags.StringVar(&tags, "tags", "", "go build tags")
-	flags.StringVar(&outputTpl, "output", "{{.Dir}}_{{.OS}}_{{.Arch}}", "output path")
+	flags.StringVar(&outputTpl, "output", "{{.Dir}}_{{.OS}}_{{.Arch}}{{.ARM}}", "output path")
 	flags.IntVar(&parallel, "parallel", -1, "parallelization factor")
 	flags.BoolVar(&buildToolchain, "build-toolchain", false, "build toolchain")
 	flags.BoolVar(&verbose, "verbose", false, "verbose")
@@ -135,6 +136,12 @@ func realMain() int {
 		}
 	}
 
+	fmt.Println("Building for platforms:")
+	for _, platform := range platforms {
+		fmt.Printf("%s\n", platform.String())
+	}
+	fmt.Println("")
+
 	// Build in parallel!
 	fmt.Printf("Number of parallel builds: %d\n\n", parallel)
 	var errorLock sync.Mutex
@@ -216,6 +223,7 @@ Options:
   -mod=""             Additional '-mod' value to pass to go build
   -os=""              Space-separated list of operating systems to build for
   -osarch=""          Space-separated list of os/arch pairs to build for
+  -armarch=""         Space-separated list of GOARM arch version to build for when arch is "arm"
   -osarch-list        List supported os/arch pairs for your Go version
   -output="foo"       Output path template. See below for more info
   -parallel=-1        Amount of parallelism, defaults to number of CPUs
