@@ -124,6 +124,10 @@ var (
 
 	// Nothing changed from 1.5 to 1.6
 	Platforms_1_6 = Platforms_1_5
+
+	Platforms_1_7 = append(Platforms_1_6 , []Platform{
+		{OS: "linux", Arch: "s390x", Default: false},
+	}...)
 )
 
 // SupportedPlatforms returns the full list of supported platforms for
@@ -141,6 +145,8 @@ func SupportedPlatforms(v string) []Platform {
 		return Platforms_1_5
 	} else if strings.HasPrefix(v, "go1.6") {
 		return Platforms_1_6
+	} else if strings.HasPrefix(v, "go1.7") {
+		return Platforms_1_7
 	}
 
 	// Assume latest
