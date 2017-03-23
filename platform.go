@@ -150,5 +150,5 @@ func SupportedPlatforms(v string) []Platform {
 	}
 
 	// Assume latest
-	return Platforms_1_6
+	return Platforms_1_7
 }
