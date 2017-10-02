@@ -23,27 +23,6 @@ func (p *Platform) String() string {
 }
 
 var (
-	OsList = []string{
-		"darwin",
-		"dragonfly",
-		"freebsd",
-		"linux",
-		"netbsd",
-		"openbsd",
-		"plan9",
-		"solaris",
-		"windows",
-	}
-
-	ArchList = []string{
-		"386",
-		"amd64",
-		"arm",
-		"arm64",
-		"ppc64",
-		"ppc64le",
-	}
-
 	Platforms_1_0 = []Platform{
 		{"darwin", "386", true},
 		{"darwin", "amd64", true},
@@ -87,6 +66,30 @@ var (
 		{"linux", "ppc64", false},
 		{"linux", "ppc64le", false},
 	}...)
+
+	Platforms_1_6 = append(Platforms_1_5, []Platform{
+		{"android", "386", false},
+		{"linux", "mips64", false},
+		{"linux", "mips64le", false},
+	}...)
+
+	Platforms_1_7 = append(Platforms_1_5, []Platform{
+		// While not fully supported s390x is generally useful
+		{"linux", "s390x", true},
+		{"plan9", "arm", false},
+		// Add the 1.6 Platforms, but reflect full support for mips64 and mips64le
+		{"android", "386", false},
+		{"linux", "mips64", true},
+		{"linux", "mips64le", true},
+	}...)
+
+	Platforms_1_8 = append(Platforms_1_7, []Platform{
+		{"linux", "mips", true},
+		{"linux", "mipsle", true},
+	}...)
+
+	// no new platforms in 1.9
+	Platforms_1_9 = Platforms_1_8
 )
 
 // SupportedPlatforms returns the full list of supported platforms for
@@ -102,8 +105,16 @@ func SupportedPlatforms(v string) []Platform {
 		return Platforms_1_4
 	} else if strings.HasPrefix(v, "go1.5") {
 		return Platforms_1_5
+	} else if strings.HasPrefix(v, "go1.6") {
+		return Platforms_1_6
+	} else if strings.HasPrefix(v, "go1.7") {
+		return Platforms_1_7
+	} else if strings.HasPrefix(v, "go1.8") {
+		return Platforms_1_8
+	} else if strings.HasPrefix(v, "go1.9") {
+		return Platforms_1_9
 	}
 
 	// Assume latest
-	return Platforms_1_5
+	return Platforms_1_9
 }
