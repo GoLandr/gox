@@ -49,32 +49,6 @@ func (p *Platform) GetARMVersion() string {
 }
 
 var (
-	OsList = []string{
-		"darwin",
-		"dragonfly",
-		"linux",
-		"android",
-		"solaris",
-		"freebsd",
-		"nacl",
-		"netbsd",
-		"openbsd",
-		"plan9",
-		"windows",
-	}
-
-	ArchList = []string{
-		"386",
-		"amd64",
-		"amd64p32",
-		"arm",
-		"arm64",
-		"mips64",
-		"mips64le",
-		"ppc64",
-		"ppc64le",
-	}
-
 	Platforms_1_0 = []Platform{
 		{OS: "darwin", Arch: "386", Default: true},
 		{OS: "darwin", Arch: "amd64", Default: true},
@@ -122,12 +96,29 @@ var (
 		{OS: "linux", Arch: "ppc64le", Default: false},
 	}...)
 
-	// Nothing changed from 1.5 to 1.6
-	Platforms_1_6 = Platforms_1_5
-
-	Platforms_1_7 = append(Platforms_1_6 , []Platform{
-		{OS: "linux", Arch: "s390x", Default: false},
+	Platforms_1_6 = append(Platforms_1_5, []Platform{
+		{OS: "android", Arch: "386", Default: false},
+		{OS: "linux", Arch: "mips64", Default: false},
+		{OS: "linux", Arch: "mips64le", Default: false},
 	}...)
+
+	Platforms_1_7 = append(Platforms_1_5, []Platform{
+		// While not fully supported s390x is generally useful
+		{OS: "linux", Arch: "s390x", Default: true},
+		{OS: "plan9", Arch: "arm", Default: false},
+		// Add the 1.6 Platforms, but reflect full support for mips64 and mips64le
+		{OS: "android", Arch: "386", Default: false},
+		{OS: "linux", Arch: "mips64", Default: true},
+		{OS: "linux", Arch: "mips64le", Default: true},
+	}...)
+
+	Platforms_1_8 = append(Platforms_1_7, []Platform{
+		{OS: "linux", Arch: "mips", Default: true},
+		{OS: "linux", Arch: "mipsle", Default: true},
+	}...)
+
+	// no new platforms in 1.9
+	Platforms_1_9 = Platforms_1_8
 )
 
 // SupportedPlatforms returns the full list of supported platforms for
@@ -147,8 +138,12 @@ func SupportedPlatforms(v string) []Platform {
 		return Platforms_1_6
 	} else if strings.HasPrefix(v, "go1.7") {
 		return Platforms_1_7
+	} else if strings.HasPrefix(v, "go1.8") {
+		return Platforms_1_8
+	} else if strings.HasPrefix(v, "go1.9") {
+		return Platforms_1_9
 	}
 
 	// Assume latest
-	return Platforms_1_7
+	return Platforms_1_9
 }
