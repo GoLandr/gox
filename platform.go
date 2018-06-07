@@ -119,6 +119,7 @@ var (
 
 	// no new platforms in 1.9
 	Platforms_1_9 = Platforms_1_8
+	Platforms_1_10 = Platforms_1_9
 )
 
 // SupportedPlatforms returns the full list of supported platforms for
@@ -142,8 +143,10 @@ func SupportedPlatforms(v string) []Platform {
 		return Platforms_1_8
 	} else if strings.HasPrefix(v, "go1.9") {
 		return Platforms_1_9
+	} else if strings.HasPrefix(v, "go1.10") {
+		return Platforms_1_10
 	}
 
 	// Assume latest
-	return Platforms_1_9
+	return Platforms_1_10
 }
