@@ -126,24 +126,24 @@ var (
 	}...)
 
 	Platforms_1_6 = append(Platforms_1_5, []Platform{
-		{"android", "386", false},
-		{"linux", "mips64", false},
-		{"linux", "mips64le", false},
+		{OS: "android", Arch: "386", Default: false},
+		{OS: "linux", Arch: "mips64", Default: false},
+		{OS: "linux", Arch: "mips64le", Default: false},
 	}...)
 
 	Platforms_1_7 = append(Platforms_1_5, []Platform{
 		// While not fully supported s390x is generally useful
-		{"linux", "s390x", true},
-		{"plan9", "arm", false},
+		{OS: "linux", Arch: "s390x", Default: true},
+		{OS: "plan9", Arch: "arm", Default: false},
 		// Add the 1.6 Platforms, but reflect full support for mips64 and mips64le
-		{"android", "386", false},
-		{"linux", "mips64", true},
-		{"linux", "mips64le", true},
+		{OS: "android", Arch: "386", Default: false},
+		{OS: "linux", Arch: "mips64", Default: true},
+		{OS: "linux", Arch: "mips64le", Default: true},
 	}...)
 
 	Platforms_1_8 = append(Platforms_1_7, []Platform{
-		{"linux", "mips", true},
-		{"linux", "mipsle", true},
+		{OS: "linux", Arch: "mips", Default: true},
+		{OS: "linux", Arch: "mipsle", Default: true},
 	}...)
 
 	// no new platforms in 1.9
