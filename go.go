@@ -22,19 +22,21 @@ type OutputTemplateData struct {
 }
 
 type CompileOpts struct {
-	PackagePath string
-	Platform    Platform
-	OutputTpl   string
-	Ldflags     string
-	Gcflags     string
-	Asmflags    string
-	Tags        string
-	Cc          string
-	Cxx         string
-	ModMode     string
-	Cgo         bool
-	Rebuild     bool
-	GoCmd       string
+	PackagePath    string
+	Platform       Platform
+	OutputTpl      string
+	Ldflags        string
+	Gcflags        string
+	Asmflags       string
+	Tags           string
+	Cc             string
+	Cxx            string
+	ModMode        string
+	Cgo            bool
+	Rebuild        bool
+	GoRace         bool
+	GoCmd          string
+	CCrossCompiler string
 }
 
 // GoCrossCompile
@@ -46,10 +48,16 @@ func GoCrossCompile(opts *CompileOpts) error {
 	// If we're building for our own platform, then enable cgo always. We
 	// respect the CGO_ENABLED flag if that is explicitly set on the platform.
 	if !opts.Cgo && os.Getenv("CGO_ENABLED") != "0" {
-		opts.Cgo = runtime.GOOS == opts.Platform.OS &&
-			runtime.GOARCH == opts.Platform.Arch
+		opts.Cgo = runtime.GOOS == opts.Platform.OS && runtime.GOARCH == opts.Platform.Arch
 	}
-
+	if opts.Cgo {
+		env = append(env, "CGO_ENABLED=1")
+		if opts.CCrossCompiler != "" {
+			env = append(env, "CC="+opts.CCrossCompiler)
+		}
+	} else {
+		env = append(env, "CGO_ENABLED=0")
+	}
 	if opts.Cc != "" {
 		env = append(env, "CC="+opts.Cc)
 	}
@@ -125,6 +133,10 @@ func GoCrossCompile(opts *CompileOpts) error {
 	}
 	if opts.ModMode != "" {
 		args = append(args, "-mod", opts.ModMode)
+	}
+	if opts.GoRace {
+		//opts.GoCmd = opts.GoCmd + " -race"
+		args = append(args, "-race")
 	}
 	args = append(args,
 		"-gcflags", opts.Gcflags,
