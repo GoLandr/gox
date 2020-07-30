@@ -44,6 +44,10 @@ Number of parallel builds: 4
 -->    netbsd/amd64: github.com/GoLandr/gox
 -->      netbsd/arm: github.com/GoLandr/gox
 -->       plan9/386: github.com/GoLandr/gox
+-->     android/arm: github.com/GoLandr/gox
+-->     android/386: github.com/GoLandr/gox
+-->      linux/mips: github.com/GoLandr/gox
+-->    linux/mipsel: github.com/GoLandr/gox
 ```
 
 Or, if you want to build a package and sub-packages:
