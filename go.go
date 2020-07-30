@@ -29,6 +29,8 @@ type CompileOpts struct {
 	Gcflags     string
 	Asmflags    string
 	Tags        string
+	Cc          string
+	Cxx         string
 	ModMode     string
 	Cgo         bool
 	Rebuild     bool
@@ -46,6 +48,13 @@ func GoCrossCompile(opts *CompileOpts) error {
 	if !opts.Cgo && os.Getenv("CGO_ENABLED") != "0" {
 		opts.Cgo = runtime.GOOS == opts.Platform.OS &&
 			runtime.GOARCH == opts.Platform.Arch
+	}
+
+	if opts.Cc != "" {
+		env = append(env, "CC="+opts.Cc)
+	}
+	if opts.Cxx != "" {
+		env = append(env, "CXX="+opts.Cxx)
 	}
 
 	// If cgo is enabled then set that env var
